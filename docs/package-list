@@ -1,0 +1,13 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:kommander-core
+expect
+expect.internal
+kommander
+kommander.internal
+module:sanity-core
+sanity
+sanity.internal
+module:sanity-local
+sanity

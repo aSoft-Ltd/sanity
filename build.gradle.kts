@@ -18,7 +18,7 @@ group = "tz.co.asoft"
 version = v
 
 tasks.dokkaHtmlMultiModule {
-    moduleName.set("Kommander")
+    moduleName.set("Sanity")
     outputDirectory.set(rootDir.resolve("docs"))
     moduleVersion.set(v)
     includes.from("ReadMe.md")
@@ -32,7 +32,7 @@ subprojects {
     version = v
 
     configure<MavenPublishBaseExtension> {
-        publishToMavenCentral(SonatypeHost.DEFAULT,automaticRelease = true)
+        publishToMavenCentral(SonatypeHost.DEFAULT, automaticRelease = true)
 
         signAllPublications()
 
@@ -42,11 +42,11 @@ subprojects {
             name.set(p.name)
             description.set(p.description)
             inceptionYear.set("2019")
-            url.set("https://github.com/aSoft-Ltd/kommander")
+            url.set("https://github.com/aSoft-Ltd/sanity")
             licenses {
                 license {
                     name.set("MIT License")
-                    url.set("https://github.com/aSoft-Ltd/kommander/blob/master/LICENSE")
+                    url.set("https://github.com/aSoft-Ltd/sanity/blob/master/LICENSE")
                 }
             }
             developers {
@@ -57,9 +57,9 @@ subprojects {
                 }
             }
             scm {
-                url.set("https://github.com/aSoft-Ltd/kommander/")
-                connection.set("scm:git:git://github.com/aSoft-Ltd/kommander.git")
-                developerConnection.set("scm:git:ssh://git@github.com/aSoft-Ltd/kommander.git")
+                url.set("https://github.com/aSoft-Ltd/sanity/")
+                connection.set("scm:git:git://github.com/aSoft-Ltd/sanity.git")
+                developerConnection.set("scm:git:ssh://git@github.com/aSoft-Ltd/sanity.git")
             }
         }
     }
