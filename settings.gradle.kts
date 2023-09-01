@@ -1,26 +1,11 @@
+import java.io.File
+
 pluginManagement {
-    enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
-    repositories {
-        google()
-        gradlePluginPortal()
-        mavenCentral()
-    }
-
-    dependencyResolutionManagement {
-        versionCatalogs {
-            file("../versions/gradle/versions").listFiles().map {
-                it.nameWithoutExtension to it.absolutePath
-            }.forEach { (name, path) ->
-                create(name) { from(files(path)) }
-            }
-        }
-    }
+    includeBuild("../build-logic")
 }
 
-fun includeRoot(name: String, path: String) {
-    include(":$name")
-    project(":$name").projectDir = File(path)
+plugins {
+    id("multimodule")
 }
 
 fun includeSubs(base: String, path: String = base, vararg subs: String) {
@@ -30,10 +15,8 @@ fun includeSubs(base: String, path: String = base, vararg subs: String) {
     }
 }
 
+listOf("kommander").forEach { includeBuild("../$it") }
+
 rootProject.name = "sanity"
 
-includeBuild("../able")
-
-includeSubs("kommander", "../kommander", "core")
-// submodules
-includeSubs("sanity", ".", "core", "local")
+includeSubs("sanity", "../sanity", "core", "local")
