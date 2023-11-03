@@ -4,6 +4,7 @@ import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.server.application.call
+import io.ktor.server.plugins.origin
 import io.ktor.server.response.cacheControl
 import io.ktor.server.response.header
 import io.ktor.server.response.respondBytesWriter
@@ -13,11 +14,14 @@ import io.ktor.utils.io.writeStringUtf8
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-fun Routing.installSanity(bus: EventSource, endpoint: SanityEndpoint) = get(endpoint.events()) {
+fun Routing.installSanity(handler: SanityHandler, endpoint: SanityEndpoint) = get(endpoint.events()) {
     call.response.cacheControl(CacheControl.NoCache(null))
     call.response.header(HttpHeaders.Connection, "Keep-Alive")
+    val ipv4 = call.request.origin.remoteAddress
+    println("Starting new connection: $ipv4")
+    handler.ensureMaxPolicy(call.request.origin.remoteAddress)
     call.respondBytesWriter(contentType = ContentType.Text.EventStream) {
-        bus.subscribe("*") {
+        val subscriber = handler.bus.subscribe("*") {
             launch {
                 writeStringUtf8("id: ${it.topic}\n")
                 writeStringUtf8("event: message\n")
@@ -26,9 +30,12 @@ fun Routing.installSanity(bus: EventSource, endpoint: SanityEndpoint) = get(endp
                 flush()
             }
         }
-        // block to hold the connection
-        while (true) {
+
+        val client = handler.add(ipv4, subscriber)
+
+        while (client.alive) { // keep alive for future events
             delay(1000)
         }
     }
+    println("Disconnected: $ipv4")
 }
