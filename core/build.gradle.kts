@@ -20,6 +20,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(libs.kiota.url)
+                api(kotlinx.coroutines.core)
             }
         }
     }

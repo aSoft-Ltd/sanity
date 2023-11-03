@@ -5,7 +5,18 @@ import kotlin.test.Test
 
 class LocalBusTest {
 
-    val bus: EventBus = LocalBus()
+    private val bus: EventBus = LocalBus()
+
+    @Test
+    fun should_be_able_to_subscribe_to_any_event() {
+        var eventFired = false
+        val subscriber = bus.subscribe("*") {
+            eventFired = true
+        }
+        bus.dispatch("test/123")
+        subscriber.unsubscribe()
+        expect(eventFired).toBe(true)
+    }
 
     @Test
     fun should_be_able_to_subscribe() {

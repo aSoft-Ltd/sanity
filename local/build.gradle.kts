@@ -1,11 +1,9 @@
-@Suppress("DSL_SCOPE_VIOLATION") plugins {
+plugins {
     kotlin("multiplatform")
     id("tz.co.asoft.library")
 }
 
 description = "An event streaming kotlin multiplatform library for local events"
-
-val tmp = 5
 
 kotlin {
     jvm { library() }
@@ -19,7 +17,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(libs.sanity.core)
+                api(projects.sanityCore)
             }
         }
 
