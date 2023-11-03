@@ -5,8 +5,8 @@ import sanity.Event
 
 class SubscriberImpl(
     val pattern: String,
-    val callback: (Event) -> Unit,
-    val container: MutableList<Subscriber>
+    private val callback: (Event) -> Unit,
+    private val container: MutableList<Subscriber>
 ) : Subscriber {
     operator fun invoke(event: Event) = callback(event)
 

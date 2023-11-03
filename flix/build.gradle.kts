@@ -1,16 +1,11 @@
-@Suppress("DSL_SCOPE_VIOLATION") plugins {
+plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization")
     id("tz.co.asoft.library")
 }
 
-description = "An event streaming kotlin multiplatform library"
-
-val tmp = 5
-
 kotlin {
     jvm { library() }
-    if (Targeting.JS) js(IR) { library() }
-    if (Targeting.WASM) wasm { library() }
     val osxTargets = if (Targeting.OSX) osxTargets() else listOf()
     val ndkTargets = if (Targeting.NDK) ndkTargets() else listOf()
     val linuxTargets = if (Targeting.LINUX) linuxTargets() else listOf()
@@ -19,7 +14,15 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(libs.kiota.url)
+                api(projects.sanityCore)
+                api(libs.koncurrent.later.coroutines)
+                api(ktor.server.core)
+            }
+        }
+
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kommander.coroutines)
             }
         }
     }
