@@ -7,10 +7,8 @@ class SanityHandler(
     internal val clients = mutableMapOf<String, MutableList<Client>>()
 
     internal fun ensureMaxPolicy(ipv4: String) {
-        println("Ensuring policy")
         val connected = clients[ipv4] ?: return
         if (connected.size < maxClientsPerIp) return
-        println("Max number of clients violated. Removing one")
         val discard = connected.first()
         discard.alive = false
         discard.subscriber.unsubscribe()

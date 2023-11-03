@@ -18,7 +18,6 @@ fun Routing.installSanity(handler: SanityHandler, endpoint: SanityEndpoint) = ge
     call.response.cacheControl(CacheControl.NoCache(null))
     call.response.header(HttpHeaders.Connection, "Keep-Alive")
     val ipv4 = call.request.origin.remoteAddress
-    println("Starting new connection: $ipv4")
     handler.ensureMaxPolicy(call.request.origin.remoteAddress)
     call.respondBytesWriter(contentType = ContentType.Text.EventStream) {
         val subscriber = handler.bus.subscribe("*") {
@@ -37,5 +36,4 @@ fun Routing.installSanity(handler: SanityHandler, endpoint: SanityEndpoint) = ge
             delay(1000)
         }
     }
-    println("Disconnected: $ipv4")
 }
