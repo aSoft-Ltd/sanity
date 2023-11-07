@@ -14,13 +14,13 @@ import io.ktor.utils.io.writeStringUtf8
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-fun Routing.installSanity(handler: SanityHandler, endpoint: SanityEndpoint) = get(endpoint.events()) {
+fun Routing.installSanity(controller: SanityController) = get(controller.endpoint.events()) {
     call.response.cacheControl(CacheControl.NoCache(null))
     call.response.header(HttpHeaders.Connection, "Keep-Alive")
     val ipv4 = call.request.origin.remoteAddress
-    handler.ensureMaxPolicy(call.request.origin.remoteAddress)
+    controller.handler.ensureMaxPolicy(call.request.origin.remoteAddress)
     call.respondBytesWriter(contentType = ContentType.Text.EventStream) {
-        val subscriber = handler.bus.subscribe("*") {
+        val subscriber = controller.handler.bus.subscribe("*") {
             launch {
                 writeStringUtf8("id: ${it.topic}\n")
                 writeStringUtf8("event: message\n")
@@ -30,7 +30,7 @@ fun Routing.installSanity(handler: SanityHandler, endpoint: SanityEndpoint) = ge
             }
         }
 
-        val client = handler.add(ipv4, subscriber)
+        val client = controller.handler.add(ipv4, subscriber)
 
         while (client.alive) { // keep alive for future events
             delay(1000)
