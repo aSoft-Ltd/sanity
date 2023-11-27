@@ -1,5 +1,5 @@
 package sanity
 
-class SanityEndpoint(private val base: String) {
+class SanityRoutes(private val base: String) {
     fun events() = "$base/events"
 }
