@@ -2,5 +2,5 @@ package sanity
 
 class SanityController(
     val handler: SanityHandler,
-    val endpoint: SanityRoutes
+    val endpoint: SanityEndpoint
 )

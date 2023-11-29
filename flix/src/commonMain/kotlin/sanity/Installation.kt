@@ -3,6 +3,7 @@ package sanity
 import io.ktor.http.CacheControl
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.RequestConnectionPoint
 import io.ktor.server.application.call
 import io.ktor.server.plugins.origin
 import io.ktor.server.response.cacheControl
@@ -17,8 +18,8 @@ import kotlinx.coroutines.launch
 fun Routing.installSanity(controller: SanityController) = get(controller.endpoint.events()) {
     call.response.cacheControl(CacheControl.NoCache(null))
     call.response.header(HttpHeaders.Connection, "Keep-Alive")
-    val ipv4 = call.request.origin.remoteAddress
-    controller.handler.ensureMaxPolicy(call.request.origin.remoteAddress)
+    val domain = call.request.origin.toDomain()
+    controller.handler.ensureMaxPolicy(domain)
     call.respondBytesWriter(contentType = ContentType.Text.EventStream) {
         val subscriber = controller.handler.bus.subscribe("*") {
             launch {
@@ -30,10 +31,12 @@ fun Routing.installSanity(controller: SanityController) = get(controller.endpoin
             }
         }
 
-        val client = controller.handler.add(ipv4, subscriber)
+        val client = controller.handler.add(domain, subscriber)
 
         while (client.alive) { // keep alive for future events
             delay(1000)
         }
     }
 }
+
+private fun RequestConnectionPoint.toDomain() = "$scheme://$serverHost:$serverPort"

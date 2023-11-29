@@ -6,8 +6,8 @@ class SanityHandler(
 ) {
     internal val clients = mutableMapOf<String, MutableList<Client>>()
 
-    internal fun ensureMaxPolicy(ipv4: String) {
-        val connected = clients[ipv4] ?: return
+    internal fun ensureMaxPolicy(domain: String) {
+        val connected = clients[domain] ?: return
         if (connected.size < maxClientsPerIp) return
         val discard = connected.first()
         discard.alive = false
@@ -15,8 +15,8 @@ class SanityHandler(
         connected.remove(discard)
     }
 
-    internal fun add(ipv4: String, subscriber: Subscriber): Client {
-        val list = clients.getOrPut(ipv4) { mutableListOf() }
+    internal fun add(domain: String, subscriber: Subscriber): Client {
+        val list = clients.getOrPut(domain) { mutableListOf() }
         val client = Client(subscriber, true)
         list.add(client)
         return client
