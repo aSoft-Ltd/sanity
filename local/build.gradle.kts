@@ -8,7 +8,7 @@ description = "An event streaming kotlin multiplatform library for local events"
 kotlin {
     jvm { library() }
     if (Targeting.JS) js(IR) { library() }
-    if (Targeting.WASM) wasm { library() }
+//    if (Targeting.WASM) wasm { library() }
     if (Targeting.OSX) osxTargets() else listOf()
     if (Targeting.NDK) ndkTargets() else listOf()
     if (Targeting.LINUX) linuxTargets() else listOf()
