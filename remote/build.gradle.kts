@@ -1,4 +1,4 @@
-@Suppress("DSL_SCOPE_VIOLATION") plugins {
+plugins {
     kotlin("multiplatform")
     id("tz.co.asoft.library")
 }
