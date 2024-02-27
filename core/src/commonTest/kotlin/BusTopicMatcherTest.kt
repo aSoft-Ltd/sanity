@@ -13,7 +13,7 @@ class BusTopicMatcherTest {
         var collected: String? = null
         bus.subscribe("/test/{uid}") {
             val uid by it.match
-            collected = uid.getOrNull()
+            collected = uid
         }
         bus.dispatch("/test/123")
         expect(collected).toBe("123")
@@ -26,8 +26,8 @@ class BusTopicMatcherTest {
         bus.subscribe("/test/{method}/{uid}") {
             val uid by it.match
             val method by it.match
-            id = uid.getOrNull()
-            m = method.getOrNull()
+            id = uid
+            m = method
         }
         bus.dispatch("/test/email/123")
         expect(id).toBe("123")
