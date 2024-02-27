@@ -1,6 +1,9 @@
 package sanity
 
-interface Event {
-    val topic: String
-    val data: Any?
-}
+import kiota.UrlMatch
+
+class Event(
+    val topic: String,
+    val match: UrlMatch,
+    val data: Any? = null
+)
