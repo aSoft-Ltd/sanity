@@ -3,7 +3,7 @@ package sanity
 class Subscriber(
     val pattern: String,
     private val callback: (Event) -> Unit,
-    private val container: MutableList<Subscriber>
+    private val container: MutableList<Subscriber?>
 ) {
     operator fun invoke(event: Event) = callback(event)
 

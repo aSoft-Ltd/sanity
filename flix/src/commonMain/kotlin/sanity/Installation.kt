@@ -17,6 +17,7 @@ fun Routing.installSanity(controller: SanityController) = get(controller.endpoin
     call.response.cacheControl(CacheControl.NoCache(null))
     call.response.header(HttpHeaders.Connection, "Keep-Alive")
     call.respondBytesWriter(contentType = ContentType.Text.EventStream) {
+        // TODO: Subscriber gets treated harshly by the GC, find out why
         val subscriber = controller.handler.bus.subscribe("*") {
             if (!isClosedForWrite) launch {
                 writeStringUtf8("id: ${it.topic}\n")
