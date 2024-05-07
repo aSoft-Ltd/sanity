@@ -10,6 +10,7 @@ import io.ktor.server.response.respondBytesWriter
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
 import io.ktor.utils.io.writeStringUtf8
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -28,9 +29,10 @@ fun Routing.installSanity(controller: SanityController) = get(controller.endpoin
             }
         }
 
-        while (!isClosedForWrite) { // keep alive for future events
-            delay(1000)
+        try {
+            awaitCancellation()
+        } finally {
+            subscriber.unsubscribe()
         }
-        subscriber.unsubscribe()
     }
 }
